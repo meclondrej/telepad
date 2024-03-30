@@ -3,4 +3,21 @@ description: Teleportation pads for the Spigot API 1.20
 author: meclondrej
 version: 1.0-SNAPSHOT
 api-version: 1.20
-main: cz.meclondrej.telepad.Main
+main: cz.meclondrej.telepad.Plugin
+commands:
+  telepad:
+    description: Controls telepads
+    usage: /<command> <subcommand>
+permissions:
+  telepad.create:
+    description: Allows creation of telepads
+    default: op
+  telepad.remove:
+    description: Allows removal of telepads
+    default: op
+  telepad.list:
+    description: Allows listing of telepads
+    default: true
+  telepad.ring:
+    description: Allows usage of telepads
+    default: true
