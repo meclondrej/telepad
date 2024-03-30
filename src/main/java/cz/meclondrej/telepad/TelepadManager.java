@@ -1,6 +1,10 @@
 package cz.meclondrej.telepad;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,41 +35,43 @@ public class TelepadManager {
         if (config.isSet("telepads")) {
             ConfigurationSection telepads = config.getConfigurationSection("telepads");
             if (telepads != null) {
-                for (String label : telepads.getKeys(false)) {
-                    ConfigurationSection telepad = telepads.getConfigurationSection(label);
+                for (String encodedLabel : telepads.getKeys(false)) {
+                    ConfigurationSection telepad = telepads.getConfigurationSection(encodedLabel);
 
                     if (!telepad.isSet("x"))
-                        throw new Error("cannot read config file at telepads.%s.x".formatted(label));
+                        throw new Error("cannot read config file at telepads.%s.x".formatted(encodedLabel));
                     int x = telepad.getInt("x");
 
                     if (!telepad.isSet("y"))
-                        throw new Error("cannot read config file at telepads.%s.y".formatted(label));
+                        throw new Error("cannot read config file at telepads.%s.y".formatted(encodedLabel));
                     int y = telepad.getInt("y");
 
                     if (!telepad.isSet("z"))
-                        throw new Error("cannot read config file at telepads.%s.z".formatted(label));
+                        throw new Error("cannot read config file at telepads.%s.z".formatted(encodedLabel));
                     int z = telepad.getInt("z");
 
                     if (!telepad.isSet("world"))
-                        throw new Error("cannot read config file at telepads.%s.world".formatted(label));
+                        throw new Error("cannot read config file at telepads.%s.world".formatted(encodedLabel));
                     World world = Bukkit.getWorld(telepad.getString("world"));
                     if (world == null)
-                        throw new Error("world name at telepads.%s.world does not exist".formatted(label));
+                        throw new Error("world name at telepads.%s.world does not exist".formatted(encodedLabel));
 
-                    TelepadManager.telepads.add(new Telepad(new Location(world, x, y, z), label));
+                    TelepadManager.telepads.add(new Telepad(new Location(world, x, y, z), new String(Base64.getDecoder().decode(encodedLabel), StandardCharsets.UTF_8)));
                 }
             }
         }
     }
 
-    public static void save() {
+    public static void save() throws IOException {
         FileConfiguration config = Plugin.singleton.getConfig();
         for (Telepad telepad : TelepadManager.telepads) {
-            config.set("telepads.%s.x".formatted(telepad.label()), telepad.location().getBlockX());
-            config.set("telepads.%s.y".formatted(telepad.label()), telepad.location().getBlockY());
-            config.set("telepads.%s.z".formatted(telepad.label()), telepad.location().getBlockZ());
-            config.set("telepads.%s.world".formatted(telepad.label()), telepad.location().getWorld().getName());
+            String encodedLabel = Base64.getEncoder().encodeToString(telepad.label().getBytes(StandardCharsets.UTF_8));
+            config.set("telepads.%s.x".formatted(encodedLabel), telepad.location().getBlockX());
+            config.set("telepads.%s.y".formatted(encodedLabel), telepad.location().getBlockY());
+            config.set("telepads.%s.z".formatted(encodedLabel), telepad.location().getBlockZ());
+            config.set("telepads.%s.world".formatted(encodedLabel), telepad.location().getWorld().getName());
         }
+        config.save(new File(Plugin.singleton.getDataFolder(), "config.yml"));
     }
 
 }

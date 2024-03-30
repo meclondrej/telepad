@@ -1,5 +1,7 @@
 package cz.meclondrej.telepad;
 
+import java.io.IOException;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,7 +39,12 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-        TelepadManager.save();
+        try {
+            TelepadManager.save();
+        } catch (IOException ex) {
+            con.sendMessage(Plugin.formatMessage("config save failed!"));
+            con.sendMessage(ex.getStackTrace().toString());
+        }
         con.sendMessage(Plugin.formatMessage("disabled"));
     }
 
