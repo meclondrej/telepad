@@ -28,10 +28,10 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
     public void onEnable() {
         Plugin.singleton = this;
         con.sendMessage(Plugin.formatMessage("enabled"));
-        for (AbstractCommandHandler commandHandler : this.commands)
-            this.getCommand(commandHandler.getName()).setExecutor(this);
         this.saveDefaultConfig();
         TelepadManager.load();
+        for (AbstractCommandHandler commandHandler : this.commands)
+            this.getCommand(commandHandler.getName()).setExecutor(this);
         con.sendMessage(Plugin.formatMessage("initialized"));
     }
 

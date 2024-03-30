@@ -22,11 +22,11 @@ public class TelepadManager {
         if (TelepadManager.horizontalSize <= 0)
             throw new Error("telepad_config.horizontal_size must be greater than zero");
         
-        if (!config.isSet("telepad_config.vertial_reach"))
-            throw new Error("cannot read config file at telepad_config.vertial_reach");
-        TelepadManager.verticalReach = config.getInt("telepad_config.vertial_reach");
+        if (!config.isSet("telepad_config.vertical_reach"))
+            throw new Error("cannot read config file at telepad_config.vertical_reach");
+        TelepadManager.verticalReach = config.getInt("telepad_config.vertical_reach");
         if (TelepadManager.verticalReach <= 0)
-            throw new Error("telepad_config.vertial_reach must be greater than zero");
+            throw new Error("telepad_config.vertical_reach must be greater than zero");
         
         if (!config.isSet("telepads"))
             throw new Error("cannot read config file at telepads");
