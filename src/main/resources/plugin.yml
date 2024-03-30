@@ -1,7 +1,7 @@
 name: telepad
 description: Teleportation pads for the Spigot API 1.20
 author: meclondrej
-version: 1.0-SNAPSHOT
+version: 1.0
 api-version: 1.20
 main: cz.meclondrej.telepad.Plugin
 commands:
