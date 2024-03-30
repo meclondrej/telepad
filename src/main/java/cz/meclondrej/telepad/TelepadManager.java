@@ -28,32 +28,32 @@ public class TelepadManager {
         if (TelepadManager.verticalReach <= 0)
             throw new Error("telepad_config.vertical_reach must be greater than zero");
         
-        if (!config.isSet("telepads"))
-            throw new Error("cannot read config file at telepads");
-        ConfigurationSection telepads = config.getConfigurationSection("telepads");
-        if (telepads != null) {
-            for (String label : telepads.getKeys(false)) {
-                ConfigurationSection telepad = telepads.getConfigurationSection(label);
+        if (config.isSet("telepads")) {
+            ConfigurationSection telepads = config.getConfigurationSection("telepads");
+            if (telepads != null) {
+                for (String label : telepads.getKeys(false)) {
+                    ConfigurationSection telepad = telepads.getConfigurationSection(label);
 
-                if (!telepad.isSet("x"))
-                    throw new Error("cannot read config file at telepads.%s.x".formatted(label));
-                int x = telepad.getInt("x");
+                    if (!telepad.isSet("x"))
+                        throw new Error("cannot read config file at telepads.%s.x".formatted(label));
+                    int x = telepad.getInt("x");
 
-                if (!telepad.isSet("y"))
-                    throw new Error("cannot read config file at telepads.%s.y".formatted(label));
-                int y = telepad.getInt("y");
+                    if (!telepad.isSet("y"))
+                        throw new Error("cannot read config file at telepads.%s.y".formatted(label));
+                    int y = telepad.getInt("y");
 
-                if (!telepad.isSet("z"))
-                    throw new Error("cannot read config file at telepads.%s.z".formatted(label));
-                int z = telepad.getInt("z");
+                    if (!telepad.isSet("z"))
+                        throw new Error("cannot read config file at telepads.%s.z".formatted(label));
+                    int z = telepad.getInt("z");
 
-                if (!telepad.isSet("world"))
-                    throw new Error("cannot read config file at telepads.%s.world".formatted(label));
-                World world = Bukkit.getWorld(telepad.getString("world"));
-                if (world == null)
-                    throw new Error("world name at telepads.%s.world does not exist".formatted(label));
+                    if (!telepad.isSet("world"))
+                        throw new Error("cannot read config file at telepads.%s.world".formatted(label));
+                    World world = Bukkit.getWorld(telepad.getString("world"));
+                    if (world == null)
+                        throw new Error("world name at telepads.%s.world does not exist".formatted(label));
 
-                TelepadManager.telepads.add(new Telepad(new Location(world, x, y, z), label));
+                    TelepadManager.telepads.add(new Telepad(new Location(world, x, y, z), label));
+                }
             }
         }
     }
