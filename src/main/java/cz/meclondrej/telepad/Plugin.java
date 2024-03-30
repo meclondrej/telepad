@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Plugin extends JavaPlugin implements CommandExecutor {
@@ -17,7 +19,9 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
     public static Plugin singleton;
     
     private ConsoleCommandSender con = this.getServer().getConsoleSender();
-    private AbstractCommandHandler[] commands = {};
+    private AbstractCommandHandler[] commands = {
+        TelepadManager.telepadCommand
+    };
 
     public boolean onCommand(CommandSender exec, Command cmd, String alias, String[] args) {
         for (AbstractCommandHandler commandHandler : this.commands)
@@ -32,8 +36,12 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
         con.sendMessage(Plugin.formatMessage("enabled"));
         this.saveDefaultConfig();
         TelepadManager.load();
-        for (AbstractCommandHandler commandHandler : this.commands)
-            this.getCommand(commandHandler.getName()).setExecutor(this);
+        for (AbstractCommandHandler commandHandler : this.commands) {
+            PluginCommand command = this.getCommand(commandHandler.getName());
+            command.setExecutor(this);
+            if (commandHandler instanceof TabCompleter)
+                command.setTabCompleter((TabCompleter) commandHandler);
+        }
         con.sendMessage(Plugin.formatMessage("initialized"));
     }
 
