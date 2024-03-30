@@ -36,7 +36,7 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-        con.sendMessage("disabled");
+        con.sendMessage(Plugin.formatMessage("disabled"));
     }
 
 }
