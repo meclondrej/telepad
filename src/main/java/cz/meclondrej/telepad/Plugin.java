@@ -31,7 +31,7 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
         for (AbstractCommandHandler commandHandler : this.commands)
             this.getCommand(commandHandler.getName()).setExecutor(this);
         this.saveDefaultConfig();
-        con.sendMessage("initialized");
+        con.sendMessage(Plugin.formatMessage("initialized"));
     }
 
     @Override
