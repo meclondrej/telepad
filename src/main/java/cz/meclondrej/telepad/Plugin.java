@@ -31,11 +31,13 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
         for (AbstractCommandHandler commandHandler : this.commands)
             this.getCommand(commandHandler.getName()).setExecutor(this);
         this.saveDefaultConfig();
+        TelepadManager.load();
         con.sendMessage(Plugin.formatMessage("initialized"));
     }
 
     @Override
     public void onDisable() {
+        TelepadManager.save();
         con.sendMessage(Plugin.formatMessage("disabled"));
     }
 
