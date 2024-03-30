@@ -12,6 +12,8 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
         return "[telepad] %s".formatted(content);
     }
 
+    public static Plugin singleton;
+    
     private ConsoleCommandSender con = this.getServer().getConsoleSender();
     private AbstractCommandHandler[] commands = {};
 
@@ -24,9 +26,11 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
+        Plugin.singleton = this;
         con.sendMessage(Plugin.formatMessage("enabled"));
         for (AbstractCommandHandler commandHandler : this.commands)
             this.getCommand(commandHandler.getName()).setExecutor(this);
+        this.saveDefaultConfig();
         con.sendMessage("initialized");
     }
 
