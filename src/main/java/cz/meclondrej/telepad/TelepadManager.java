@@ -286,7 +286,7 @@ public class TelepadManager {
                 });
                 return telepadLabels;
             }
-            return null;
+            return new ArrayList<String>();
         }
 
     }
