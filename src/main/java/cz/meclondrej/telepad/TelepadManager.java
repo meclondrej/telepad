@@ -161,6 +161,10 @@ public class TelepadManager {
                             return true;
                         }
                     }
+                    if (TelepadManager.telepads.size() == 0) {
+                        exec.sendMessage(Plugin.formatMessage("there are no telepads"));
+                        return true;
+                    }
                     int halfSize = TelepadManager.horizontalSize / 2;
                     for (Telepad telepad : TelepadManager.telepads)
                         exec.sendMessage(Plugin.formatMessage("%s: %d %d %d".formatted(telepad.label(),
