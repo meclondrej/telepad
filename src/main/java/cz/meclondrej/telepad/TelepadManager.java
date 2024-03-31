@@ -161,12 +161,33 @@ public class TelepadManager {
                             return true;
                         }
                     }
+                    if (TelepadManager.telepads.size() == 0) {
+                        exec.sendMessage(Plugin.formatMessage("there are no telepads"));
+                        return true;
+                    }
+                    ArrayList<String> telepadLabels = new ArrayList<String>(),
+                                      telepadCoordinates = new ArrayList<String>();
+                    int maxLabelsLength = 0,
+                        maxCoordinatesLength = 0;
                     int halfSize = TelepadManager.horizontalSize / 2;
-                    for (Telepad telepad : TelepadManager.telepads)
-                        exec.sendMessage(Plugin.formatMessage("%s: %d %d %d".formatted(telepad.label(),
-                                                                                       telepad.location().getBlockX() + halfSize,
-                                                                                       telepad.location().getBlockY(),
-                                                                                       telepad.location().getBlockZ() + halfSize)));
+                    for (int i = 0; i < TelepadManager.telepads.size(); i++) {
+                        telepadLabels.add(TelepadManager.telepads.get(i).label());
+                        telepadCoordinates.add(Plugin.formatMessage("%d %d %d".formatted(TelepadManager.telepads.get(i).location().getBlockX() + halfSize,
+                                                                                         TelepadManager.telepads.get(i).location().getBlockY(),
+                                                                                         TelepadManager.telepads.get(i).location().getBlockZ() + halfSize)));
+                        if (telepadLabels.get(i).length() > maxLabelsLength)
+                            maxLabelsLength = telepadLabels.get(i).length();
+                        if (telepadCoordinates.get(i).length() > maxCoordinatesLength)
+                            maxCoordinatesLength = telepadCoordinates.get(i).length();
+                    }
+                    String verticalBorder = "-".repeat(maxLabelsLength + maxCoordinatesLength + 7);
+                    exec.sendMessage(verticalBorder);
+                    for (int i = 0; i < TelepadManager.telepads.size(); i++)
+                        exec.sendMessage("| %s%s | %s%s |".formatted(telepadLabels.get(i),
+                                                                     " ".repeat(maxLabelsLength - telepadLabels.get(i).length()),
+                                                                     telepadCoordinates.get(i),
+                                                                     " ".repeat(maxCoordinatesLength - telepadCoordinates.get(i).length())));
+                    exec.sendMessage(verticalBorder);
                     return true;
                 }
 
