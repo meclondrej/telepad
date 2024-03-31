@@ -181,13 +181,13 @@ public class TelepadManager {
                             maxCoordinatesLength = telepadCoordinates.get(i).length();
                     }
                     String verticalBorder = "-".repeat(maxLabelsLength + maxCoordinatesLength + 7);
-                    exec.sendMessage(verticalBorder);
+                    exec.sendMessage(Plugin.formatMessage(verticalBorder));
                     for (int i = 0; i < TelepadManager.telepads.size(); i++)
-                        exec.sendMessage("| %s%s | %s%s |".formatted(telepadLabels.get(i),
-                                                                     " ".repeat(maxLabelsLength - telepadLabels.get(i).length()),
-                                                                     telepadCoordinates.get(i),
-                                                                     " ".repeat(maxCoordinatesLength - telepadCoordinates.get(i).length())));
-                    exec.sendMessage(verticalBorder);
+                        exec.sendMessage(Plugin.formatMessage("| %s%s | %s%s |".formatted(telepadLabels.get(i),
+                                                                                          " ".repeat(maxLabelsLength - telepadLabels.get(i).length()),
+                                                                                          telepadCoordinates.get(i),
+                                                                                          " ".repeat(maxCoordinatesLength - telepadCoordinates.get(i).length()))));
+                    exec.sendMessage(Plugin.formatMessage(verticalBorder));
                     return true;
                 }
 
