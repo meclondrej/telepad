@@ -279,6 +279,13 @@ public class TelepadManager {
                 return null;
             if (args.length == 1)
                 return this.subcommands;
+            if (args.length == 2 && (args[0].equals("ring") || args[0].equals("remove"))) {
+                List<String> telepadLabels = new ArrayList<String>();
+                TelepadManager.telepads.forEach((Telepad x) -> {
+                    telepadLabels.add(x.label());
+                });
+                return telepadLabels;
+            }
             return null;
         }
 
