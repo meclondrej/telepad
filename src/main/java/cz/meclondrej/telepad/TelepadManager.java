@@ -20,6 +20,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 
+import cz.meclondrej.telepad.Telepad.RingException;
+
 public class TelepadManager {
     
     private static ArrayList<Telepad> telepads = new ArrayList<Telepad>();
@@ -199,18 +201,8 @@ public class TelepadManager {
                 }
                 Telepad localTelepad = null, remoteTelepad = null;
                 for (Telepad telepad : TelepadManager.telepads) {
-                    Location telepadLocation = telepad.location();
-                    if (
-                        // X in range
-                           location.getBlockX() >= telepadLocation.getBlockX()
-                        && location.getBlockX() <= telepadLocation.getBlockX() + TelepadManager.horizontalSize - 1
-                        // Y in range
-                        && location.getBlockY() >= telepadLocation.getBlockY()
-                        && location.getBlockY() <= telepadLocation.getBlockY() + TelepadManager.verticalReach - 1
-                        // Z in range
-                        && location.getBlockZ() >= telepadLocation.getBlockZ()
-                        && location.getBlockZ() <= telepadLocation.getBlockZ() + TelepadManager.horizontalSize - 1
-                    ) localTelepad = telepad;
+                    if (telepad.inTelepad(location))
+                        localTelepad = telepad;
                     if (telepad.label().equals(args[1]))
                         remoteTelepad = telepad;
                     if (localTelepad != null && remoteTelepad != null)
@@ -228,57 +220,17 @@ public class TelepadManager {
                     player.sendMessage(Plugin.formatMessage("telepad cannot ring itself"));
                     return true;
                 }
-                for (int x = 0; x < TelepadManager.horizontalSize; x++)
-                    for (int y = 0; y < TelepadManager.verticalReach; y++)
-                        for (int z = 0; z < TelepadManager.horizontalSize; z++) {
-                            Location localBlock = new Location(localTelepad.location().getWorld(),
-                                                               localTelepad.location().getBlockX() + x,
-                                                               localTelepad.location().getBlockY() + y,
-                                                               localTelepad.location().getBlockZ() + z),
-                                     remoteBlock = new Location(remoteTelepad.location().getWorld(),
-                                                                remoteTelepad.location().getBlockX() + x,
-                                                                remoteTelepad.location().getBlockY() + y,
-                                                                remoteTelepad.location().getBlockZ() + z);
-                            if (!localBlock.getBlock().isEmpty()) {
-                                player.sendMessage(Plugin.formatMessage("local telepad obstructed"));
-                                return true;
-                            }
-                            if (!remoteBlock.getBlock().isEmpty()) {
-                                player.sendMessage(Plugin.formatMessage("remote telepad obstructed"));
-                                return true;
-                            }
-                        }
-                BoundingBox localBox = new BoundingBox(localTelepad.location().getBlockX(),
-                                                       localTelepad.location().getBlockY(),
-                                                       localTelepad.location().getBlockZ(),
-                                                       localTelepad.location().getBlockX() + TelepadManager.horizontalSize - 1,
-                                                       localTelepad.location().getBlockY() + TelepadManager.verticalReach - 1,
-                                                       localTelepad.location().getBlockZ() + TelepadManager.horizontalSize - 1),
-                            remoteBox = new BoundingBox(remoteTelepad.location().getBlockX(),
-                                                        remoteTelepad.location().getBlockY(),
-                                                        remoteTelepad.location().getBlockZ(),
-                                                        remoteTelepad.location().getBlockX() + TelepadManager.horizontalSize - 1,
-                                                        remoteTelepad.location().getBlockY() + TelepadManager.verticalReach - 1,
-                                                        remoteTelepad.location().getBlockZ() + TelepadManager.horizontalSize - 1);
-                Collection<Entity> localTargets = localTelepad.location().getWorld().getNearbyEntities(localBox),
-                                   remoteTargets = remoteTelepad.location().getWorld().getNearbyEntities(remoteBox);
-                for (Entity localTarget : localTargets) {
-                    Location target = new Location(remoteTelepad.location().getWorld(),
-                                                   (double)(remoteTelepad.location().getBlockX()) + (localTarget.getLocation().getX() - (double)(localTelepad.location().getBlockX())),
-                                                   (double)(remoteTelepad.location().getBlockY()) + (localTarget.getLocation().getY() - (double)(localTelepad.location().getBlockY())),
-                                                   (double)(remoteTelepad.location().getBlockZ()) + (localTarget.getLocation().getZ() - (double)(localTelepad.location().getBlockZ())));
-                    target.setYaw(localTarget.getLocation().getYaw());
-                    target.setPitch(localTarget.getLocation().getPitch());
-                    localTarget.teleport(target);
-                }
-                for (Entity remoteTarget : remoteTargets) {
-                    Location target = new Location(localTelepad.location().getWorld(),
-                                                   (double)(localTelepad.location().getBlockX()) + (remoteTarget.getLocation().getX() - (double)(remoteTelepad.location().getBlockX())),
-                                                   (double)(localTelepad.location().getBlockY()) + (remoteTarget.getLocation().getY() - (double)(remoteTelepad.location().getBlockY())),
-                                                   (double)(localTelepad.location().getBlockZ()) + (remoteTarget.getLocation().getZ() - (double)(remoteTelepad.location().getBlockZ())));
-                    target.setYaw(remoteTarget.getLocation().getYaw());
-                    target.setPitch(remoteTarget.getLocation().getPitch());
-                    remoteTarget.teleport(target);
+                try {
+                    localTelepad.ring(remoteTelepad);
+                } catch (RingException ex) {
+                    switch (ex.getRingExceptionType()) {
+                        case LocalObstructed:
+                            player.sendMessage(Plugin.formatMessage("local telepad obstructed"));
+                            return true;
+                        case RemoteObstructed:
+                            player.sendMessage(Plugin.formatMessage("remote telepad obstructed"));
+                            return true;
+                    }
                 }
                 return true;
             }
