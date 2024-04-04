@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -84,14 +85,16 @@ public class TelepadManager {
 
     public static class TelepadCommand extends AbstractCommandHandler implements TabCompleter {
 
-        ArrayList<String> subcommands = new ArrayList<String>();
+        private static record Subcommand(String name, String permission) {}
+
+        ArrayList<Subcommand> subcommands = new ArrayList<Subcommand>();
 
         public TelepadCommand() {
             super("telepad");
-            this.subcommands.add("create");
-            this.subcommands.add("remove");
-            this.subcommands.add("list");
-            this.subcommands.add("ring");
+            this.subcommands.add(new Subcommand("create", "telepad.create"));
+            this.subcommands.add(new Subcommand("remove", "telepad.remove"));
+            this.subcommands.add(new Subcommand("list", "telepad.list"));
+            this.subcommands.add(new Subcommand("ring", "telepad.ring"));
         }
 
         @Override
@@ -282,7 +285,7 @@ public class TelepadManager {
             if (!cmd.getName().equals(this.getName()))
                 return null;
             if (args.length == 1)
-                return this.subcommands;
+                return ((exec instanceof Player) ? this.subcommands.stream().filter(x -> ((Player)exec).hasPermission(x.permission())) : this.subcommands.stream()).map(x -> x.name()).collect(Collectors.toList());
             if (args.length == 2 && (args[0].equals("ring") || args[0].equals("remove"))) {
                 List<String> telepadLabels = new ArrayList<String>();
                 TelepadManager.telepads.forEach((Telepad x) -> {
