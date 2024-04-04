@@ -309,7 +309,7 @@ public class TelepadManager {
             }
 
             for (AbstractCommandHandler subcommand : this.subcommands)
-                if (cmd.getName().equals(subcommand.getName())) {
+                if (args[0].equals(subcommand.getName())) {
                     if ((exec instanceof Player) && !((Player)exec).hasPermission(subcommand.getPermission())) {
                         exec.sendMessage(Plugin.formatMessage("insufficient permissions"));
                         return true;
