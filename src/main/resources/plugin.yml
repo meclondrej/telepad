@@ -27,3 +27,12 @@ permissions:
   telepad.connect:
     description: Allows remote usage of telepads
     default: op
+  telepad.id:
+    description: Allows identification of a telepad
+    default: true
+  telepad.id.local:
+    description: Allows identification of a local telepad
+    default: true
+  telepad.id.remote:
+    description: Allows identification of a remote telepad
+    default: true
