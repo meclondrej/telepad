@@ -39,8 +39,7 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
         for (AbstractCommandHandler commandHandler : this.commands) {
             PluginCommand command = this.getCommand(commandHandler.getName());
             command.setExecutor(this);
-            if (commandHandler instanceof TabCompleter)
-                command.setTabCompleter((TabCompleter) commandHandler);
+            command.setTabCompleter((TabCompleter) commandHandler);
         }
         con.sendMessage(Plugin.formatMessage("initialized"));
     }
