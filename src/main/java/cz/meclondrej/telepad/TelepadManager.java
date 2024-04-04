@@ -291,6 +291,30 @@ public class TelepadManager {
 
         }
 
+        private static class TelepadSaveCommand extends AbstractCommandHandler {
+
+            public TelepadSaveCommand() {
+                super("save", "telepad.save");
+            }
+
+            @Override
+            public boolean handle(CommandSender exec, Command cmd, String alias, String[] args) {
+                try {
+                    TelepadManager.save();
+                } catch (IOException ex) {
+                    exec.sendMessage(Plugin.formatMessage("an error occured while saving"));
+                    return true;
+                }
+                exec.sendMessage(Plugin.formatMessage("successfully saved into config file"));
+                return true;
+            }
+
+            public List<String> onTabComplete(CommandSender exec, Command cmd, String alias, String[] args) {
+                return new ArrayList<String>();
+            }
+
+        }
+
         ArrayList<AbstractCommandHandler> subcommands = new ArrayList<AbstractCommandHandler>();
 
         public TelepadCommand() {
@@ -299,6 +323,7 @@ public class TelepadManager {
             this.subcommands.add(new TelepadRemoveCommand());
             this.subcommands.add(new TelepadListCommand());
             this.subcommands.add(new TelepadRingCommand());
+            this.subcommands.add(new TelepadSaveCommand());
         }
 
         @Override
