@@ -24,3 +24,6 @@ permissions:
   telepad.save:
     description: Allows manual config file saving
     default: op
+  telepad.connect:
+    description: Allows remote usage of telepads
+    default: op
