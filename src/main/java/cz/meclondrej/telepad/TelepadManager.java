@@ -71,6 +71,7 @@ public class TelepadManager {
 
     public static void save() throws IOException {
         FileConfiguration config = Plugin.singleton.getConfig();
+        config.set("telepads", null);
         for (Telepad telepad : TelepadManager.telepads) {
             String encodedLabel = Base64.getEncoder().encodeToString(telepad.label().getBytes(StandardCharsets.UTF_8));
             config.set("telepads.%s.x".formatted(encodedLabel), telepad.location().getBlockX());

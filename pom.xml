@@ -6,7 +6,7 @@
 
     <groupId>cz.meclondrej</groupId>
     <artifactId>telepad</artifactId>
-    <version>1.2</version>
+    <version>1.2.1-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
