@@ -7,25 +7,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 public abstract class AbstractCommandHandler implements TabCompleter {
-    
-    private String name;
-    private String permission;
 
-    public AbstractCommandHandler(String name, String permission) {
-        this.name = name;
-        this.permission = permission;
-    }
+	private String name;
+	private String permission;
 
-    public String getName() {
-        return this.name;
-    }
+	public AbstractCommandHandler(String name, String permission) {
+		this.name = name;
+		this.permission = permission;
+	}
 
-    public String getPermission() {
-        return this.permission;
-    }
+	public String getName() {
+		return this.name;
+	}
 
-    public abstract boolean handle(CommandSender exec, Command cmd, String alias, String[] args);
+	public String getPermission() {
+		return this.permission;
+	}
 
-    public abstract List<String> onTabComplete(CommandSender exec, Command cmd, String alias, String[] args);
+	public abstract boolean handle(CommandSender exec, Command cmd, String alias, String[] args);
+
+	public abstract List<String> onTabComplete(CommandSender exec, Command cmd, String alias, String[] args);
 
 }
