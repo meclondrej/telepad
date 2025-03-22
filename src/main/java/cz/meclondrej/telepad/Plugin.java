@@ -20,7 +20,7 @@ public class Plugin extends JavaPlugin implements CommandExecutor {
     
     private ConsoleCommandSender con = this.getServer().getConsoleSender();
     private AbstractCommandHandler[] commands = {
-        TelepadManager.telepadCommand
+        new TelepadCommand(),
     };
 
     public boolean onCommand(CommandSender exec, Command cmd, String alias, String[] args) {
