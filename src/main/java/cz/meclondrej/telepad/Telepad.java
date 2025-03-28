@@ -52,8 +52,8 @@ public record Telepad(Location location, String label) {
 	public BoundingBox getBoundingBox() {
 		Location loc = this.location();
 		return new BoundingBox(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(),
-				loc.getBlockX() + TelepadManager.horizontalSize - 1, loc.getBlockY() + TelepadManager.verticalReach - 1,
-				loc.getBlockZ() + TelepadManager.horizontalSize - 1);
+				loc.getBlockX() + TelepadManager.horizontalSize, loc.getBlockY() + TelepadManager.verticalReach,
+				loc.getBlockZ() + TelepadManager.horizontalSize);
 	}
 
 	public Collection<Entity> getEntities() {
